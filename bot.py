@@ -51,7 +51,8 @@ def admin_keyboard():
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(
-        "👋 Добро пожаловать!\n\nВыберите раздел:",
+        "👋 "👋 Добро пожаловать в Zaur Academy!\n\nМы помогаем создавать Telegram ботов,сайты автоматизацию бизнеса и все это на через телефон с помощью AI.\n\nВыберите раздел, чтобы узнать подробнее:"
+:",
         reply_markup=main_keyboard()
     )
 
