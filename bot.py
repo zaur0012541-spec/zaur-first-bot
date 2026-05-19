@@ -10,7 +10,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 SERVICES_TEXT = (
-    "📚 *Услуги Zaur Academy*\n\n"
+    "📚 Услуги Zaur Academy\n\n"
     "• Курсы программирования (Python, JavaScript)\n"
     "• Индивидуальные занятия с преподавателем\n"
     "• Подготовка к собеседованиям\n"
@@ -19,15 +19,15 @@ SERVICES_TEXT = (
 )
 
 PRICES_TEXT = (
-    "💰 *Цены Zaur Academy*\n\n"
+    "💰 Цены Zaur Academy\n\n"
     "• Групповые занятия — от 5 000 ₽/мес\n"
     "• Индивидуальные занятия — от 2 500 ₽/час\n"
     "• Карьерный коучинг — от 3 000 ₽/сессия\n"
-    "• Пробное занятие — *бесплатно*"
+    "• Пробное занятие — бесплатно"
 )
 
 CONTACTS_TEXT = (
-    "📞 *Контакты Zaur Academy*\n\n"
+    "📞 Контакты Zaur Academy\n\n"
     "🌐 Сайт: zaur.academy\n"
     "📧 Email: info@zaur.academy\n"
     "📱 Telegram: @zaur_academy\n"
@@ -44,14 +44,13 @@ def main_keyboard():
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     welcome = (
-        "👋 Добро пожаловать в *Zaur Academy*!\n\n"
+        "👋 Добро пожаловать в Zaur Academy!\n\n"
         "Мы помогаем людям освоить программирование "
         "и построить карьеру в IT.\n\n"
         "Выберите раздел, чтобы узнать подробнее:"
     )
     await update.message.reply_text(
         welcome,
-        parse_mode="Markdown",
         reply_markup=main_keyboard()
     )
 
@@ -69,7 +68,6 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         return
     await query.edit_message_text(
         text=text,
-        parse_mode="Markdown",
         reply_markup=main_keyboard()
     )
 
