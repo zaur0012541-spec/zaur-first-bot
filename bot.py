@@ -4,20 +4,16 @@ import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes, MessageHandler, filters, ConversationHandler
 
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    level=logging.INFO
-)
+logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 ADMIN_ID = int(os.environ.get("ADMIN_ID", "0"))
-
 DATA_FILE = "data.json"
 
 DEFAULT_DATA = {
-    "services": "📚 Услуги\n\n• Услуга 1\n• Услуга 2\n• Услуга 3",
-    "prices": "💰 Цены\n\n• Вариант 1 — 1000 ₽\n• Вариант 2 — 2000 ₽\n• Вариант 3 — 3000 ₽",
-    "contacts": "📞 Контакты\n\n📱 Telegram: @username\n📧 Email: email@example.com\n🕐 пн-пт 9:00-20:00"
+    "services": "Услуги Zaur Academy\n\n- Курсы по созданию Telegram ботов\n- Автоматизация бизнеса с AI\n- Индивидуальные консультации\n- Готовые боты под ключ",
+    "prices": "Цены Zaur Academy\n\n- Групповые занятия от 5000 руб/мес\n- Индивидуальные от 2500 руб/час\n- Пробное занятие - бесплатно",
+    "contacts": "Контакты Zaur Academy\n\nTelegram: @zaur_academy\nEmail: info@zaur.academy\nРабочее время: пн-пт 9:00-20:00 МСК"
 }
 
 EDITING = 1
@@ -34,25 +30,24 @@ def save_data(data):
 
 def main_keyboard():
     keyboard = [
-        [InlineKeyboardButton("📚 Услуги", callback_data="services")],
-        [InlineKeyboardButton("💰 Цены", callback_data="prices")],
-        [InlineKeyboardButton("📞 Контакты", callback_data="contacts")],
+        [InlineKeyboardButton("Услуги", callback_data="services")],
+        [InlineKeyboardButton("Цены", callback_data="prices")],
+        [InlineKeyboardButton("Контакты", callback_data="contacts")],
     ]
     return InlineKeyboardMarkup(keyboard)
 
 def admin_keyboard():
     keyboard = [
-        [InlineKeyboardButton("✏️ Изменить Услуги", callback_data="edit_services")],
-        [InlineKeyboardButton("✏️ Изменить Цены", callback_data="edit_prices")],
-        [InlineKeyboardButton("✏️ Изменить Контакты", callback_data="edit_contacts")],
-        [InlineKeyboardButton("❌ Закрыть", callback_data="close_admin")],
+        [InlineKeyboardButton("Изменить Услуги", callback_data="edit_services")],
+        [InlineKeyboardButton("Изменить Цены", callback_data="edit_prices")],
+        [InlineKeyboardButton("Изменить Контакты", callback_data="edit_contacts")],
+        [InlineKeyboardButton("Закрыть", callback_data="close_admin")],
     ]
     return InlineKeyboardMarkup(keyboard)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(
-        "👋 "Добро пожаловать в Zaur Academy!\n\nМы помогаем создавать Telegram ботов.\n\nВыберите раздел:"
-
+        "Добро пожаловать в Zaur Academy!\n\nМы помогаем создавать Telegram ботов и автоматизировать бизнес с помощью AI.\n\nВыберите раздел, чтобы узнать подробнее:",
         reply_markup=main_keyboard()
     )
 
@@ -60,7 +55,7 @@ async def admin(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if update.effective_user.id != ADMIN_ID:
         return
     await update.message.reply_text(
-        "🔧 Панель администратора\n\nЧто хотите изменить?",
+        "Панель администратора\n\nЧто хотите изменить?",
         reply_markup=admin_keyboard()
     )
 
@@ -83,7 +78,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         section = query.data.replace("edit_", "")
         context.user_data["editing"] = section
         await query.edit_message_text(
-            f"Введите новый текст для раздела.\n\nТекущий текст:\n\n{data[section]}"
+            "Введите новый текст для раздела:\n\n" + data[section]
         )
         return EDITING
 
@@ -101,10 +96,7 @@ async def save_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     data[section] = update.message.text
     save_data(data)
 
-    await update.message.reply_text(
-        "✅ Текст обновлён!",
-        reply_markup=admin_keyboard()
-    )
+    await update.message.reply_text("Текст обновлён!", reply_markup=admin_keyboard())
     return ConversationHandler.END
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -130,7 +122,7 @@ def main() -> None:
     app.add_handler(CommandHandler("admin", admin))
     app.add_handler(conv_handler)
 
-    logger.info("Бот запущен...")
+    logger.info("Bot started...")
     app.run_polling(allowed_updates=Update.ALL_TYPES)
 
 if __name__ == "__main__":
